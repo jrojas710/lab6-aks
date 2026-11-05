@@ -1,0 +1,8 @@
+# Service público de PrestaShop. Se aplica antes que el Deployment para conocer su IP (PS_DOMAIN).
+apiVersion: v1
+kind: Service
+metadata: {name: prestashop, namespace: prestashop}
+spec:
+  type: LoadBalancer
+  selector: {app: prestashop}
+  ports: [{port: 80, targetPort: 80}]

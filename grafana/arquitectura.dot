@@ -1,0 +1,21 @@
+digraph G {
+  rankdir=LR; fontname="Helvetica"; node [fontname="Helvetica", shape=box, style="rounded,filled", fillcolor="#ffffff"];
+  usuario [label="Navegador", shape=oval, fillcolor="#eeeeee"];
+  subgraph cluster_aks { label="Azure Kubernetes Service (un solo clúster)"; style="rounded"; color="#0078d4";
+    subgraph cluster_wp { label="namespace wordpress"; style="rounded,filled"; fillcolor="#e8f1fb";
+      wpsvc [label="Service wordpress\nLoadBalancer :80"]; wp [label="Deployment wordpress\n(wordpress:6.6)"];
+      mysqlsvc [label="Service mysql\nClusterIP :3306"]; mysql [label="Deployment mysql\n(mysql:8.0)"];
+      wppvc [label="PVC wordpress-html", shape=cylinder]; mysqlpvc [label="PVC mysql-data", shape=cylinder];
+      wpsec [label="Secret wp-db", shape=note]; }
+    subgraph cluster_ps { label="namespace prestashop"; style="rounded,filled"; fillcolor="#fdf0e6";
+      pssvc [label="Service prestashop\nLoadBalancer :80"]; ps [label="Deployment prestashop\n(prestashop:8.1)"];
+      mariasvc [label="Service mariadb\nClusterIP :3306"]; maria [label="Deployment mariadb\n(mariadb:10.11)"];
+      pspvc [label="PVC prestashop-html", shape=cylinder]; mariapvc [label="PVC mariadb-data", shape=cylinder];
+      pssec [label="Secret ps-db", shape=note]; }
+    prom [label="Agente Managed Prometheus\n(kube-system)", fillcolor="#f2f2f2"]; }
+  grafana [label="Azure Managed Grafana", fillcolor="#fff4d6"];
+  usuario -> wpsvc; usuario -> pssvc; wpsvc -> wp -> mysqlsvc -> mysql; pssvc -> ps -> mariasvc -> maria;
+  wp -> wppvc [style=dashed]; mysql -> mysqlpvc [style=dashed]; ps -> pspvc [style=dashed]; maria -> mariapvc [style=dashed];
+  wpsec -> mysql [style=dotted]; wpsec -> wp [style=dotted]; pssec -> maria [style=dotted]; pssec -> ps [style=dotted];
+  prom -> grafana [label="métricas de pods"];
+}

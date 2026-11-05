@@ -1,0 +1,2 @@
+Grafana: https://graf-lab6-7c1e2a-d4f5g6h7.eus2.grafana.azure.com/d/lab6-portales
+Dashboard importado: Lab 6 — WordPress y PrestaShop en AKS

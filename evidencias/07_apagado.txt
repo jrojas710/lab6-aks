@@ -1,0 +1,3 @@
+Entorno eliminado: 2026-11-05T11:18:52-05:00  (azd down --force --purge)
+Grupos de recursos restantes:
+NetworkWatcherRG

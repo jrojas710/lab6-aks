@@ -1,0 +1,57 @@
+# PS_DOMAIN va en el ConfigMap ps-config; lo crea scripts/03_desplegar.sh con la IP pública del Service.
+# Ejemplo: kubectl -n prestashop create configmap ps-config --from-literal=PS_DOMAIN=<IP>
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata: {name: prestashop-html, namespace: prestashop}
+spec:
+  accessModes: [ReadWriteOnce]
+  resources: {requests: {storage: 3Gi}}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata: {name: prestashop, namespace: prestashop, labels: {app: prestashop, portal: prestashop}}
+spec:
+  replicas: 1
+  strategy: {type: Recreate}
+  selector: {matchLabels: {app: prestashop}}
+  template:
+    metadata: {labels: {app: prestashop, portal: prestashop}}
+    spec:
+      initContainers:
+        - name: espera-bd
+          image: busybox:1.36
+          command: ["sh", "-c", "until nc -z mariadb 3306; do echo esperando mariadb; sleep 3; done"]
+      containers:
+        - name: prestashop
+          image: prestashop/prestashop:8.1-apache
+          envFrom:
+            - configMapRef: {name: ps-config}               # PS_DOMAIN
+          env:
+            - {name: DB_SERVER, value: mariadb}               # Service de SU namespace
+            - {name: DB_NAME, value: prestashop}
+            - {name: DB_USER, value: prestashop}
+            - {name: DB_PREFIX, value: ps_}
+            - name: DB_PASSWD
+              valueFrom: {secretKeyRef: {name: ps-db, key: password}}
+            - {name: PS_INSTALL_AUTO, value: "1"}             # asistente de instalación automático
+            - {name: PS_LANGUAGE, value: es}
+            - {name: PS_COUNTRY, value: CO}
+            - {name: PS_FOLDER_ADMIN, value: admin-lab6}
+            - {name: PS_ENABLE_SSL, value: "0"}
+            - {name: ADMIN_MAIL, value: admin@lab6.local}
+            - name: ADMIN_PASSWD
+              valueFrom: {secretKeyRef: {name: ps-db, key: admin-password}}
+          ports: [{containerPort: 80}]
+          readinessProbe:
+            httpGet: {path: /, port: 80}
+            initialDelaySeconds: 60
+            periodSeconds: 10
+            failureThreshold: 60
+          resources:
+            requests: {cpu: 150m, memory: 384Mi}
+            limits: {memory: 1Gi}
+          volumeMounts:
+            - {name: html, mountPath: /var/www/html, subPath: html}
+      volumes:
+        - name: html
+          persistentVolumeClaim: {claimName: prestashop-html}

@@ -1,0 +1,19 @@
+== Contenido de prueba creado 2026-11-05T10:24:35-05:00 ==
+
+### WordPress (http://203.0.113.24, admin: http://203.0.113.24/wp-admin  usuario admin)
+-- Página en la BD de WordPress:
++----+------------------------+---------------------+-------------+
+| ID | post_title             | post_date           | post_status |
++----+------------------------+---------------------+-------------+
+| 5  | Pagina de prueba Lab 6 | 2026-11-05 15:24:08 | publish     |
++----+------------------------+---------------------+-------------+
+-- HTTP http://203.0.113.24/?pagename=pagina-prueba-lab6 :
+<title>Pagina de prueba Lab 6 &#8211; Portal WordPress - Lab 6</title>
+
+### PrestaShop (http://198.51.100.37, admin: http://198.51.100.37/admin-lab6  usuario admin@lab6.local)
+producto creado id=20
+-- Producto en la BD de PrestaShop:
+id_product	name	price	date_add
+20	Producto de prueba Lab 6	25000.000000	2026-11-05 10:24:31
+-- HTTP http://198.51.100.37 (buscador):
+Producto de prueba Lab 6

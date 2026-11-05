@@ -1,0 +1,30 @@
+WordPress:  http://203.0.113.24
+PrestaShop: http://198.51.100.37   (admin: http://198.51.100.37/admin-lab6)
+
+NAME                        READY   UP-TO-DATE   AVAILABLE   AGE
+deployment.apps/mysql       1/1     1            1           12m
+deployment.apps/wordpress   1/1     1            1           9m
+NAME                             READY   STATUS    RESTARTS   AGE
+pod/mysql-f69thsvg85-j4nzt         1/1     Running   0          12m
+pod/wordpress-dmrk8sml8w-5j5sz     1/1     Running   0          9m
+NAME                TYPE           CLUSTER-IP     EXTERNAL-IP     PORT(S)        AGE
+service/mysql       ClusterIP      10.0.148.203   <none>          3306/TCP       12m
+service/wordpress   LoadBalancer   10.0.203.15    203.0.113.24   80:31482/TCP   9m
+NAME                   STATUS   VOLUME                                     CAPACITY   ACCESS MODES   STORAGECLASS   AGE
+mysql-data             Bound    pvc-3f0a6c1e-8d24-4b7e-9a51-2c6e7d1b0f93   5Gi        RWO            default        12m
+wordpress-html         Bound    pvc-6c27e9d0-41b8-4f3a-b2d5-93e0a1c87f44   2Gi        RWO            default        9m
+
+NAME                         READY   UP-TO-DATE   AVAILABLE   AGE
+deployment.apps/mariadb      1/1     1            1           12m
+deployment.apps/prestashop   1/1     1            1           9m
+NAME                              READY   STATUS    RESTARTS   AGE
+pod/mariadb-vbvf9qgpbb-7n4p8        1/1     Running   0          12m
+pod/prestashop-d5p6hr65s2-mjmdj     1/1     Running   0          9m
+NAME                 TYPE           CLUSTER-IP    EXTERNAL-IP     PORT(S)        AGE
+service/mariadb      ClusterIP      10.0.61.87    <none>          3306/TCP       12m
+service/prestashop   LoadBalancer   10.0.97.142   198.51.100.37   80:30917/TCP   9m
+NAME                   STATUS   VOLUME                                     CAPACITY   ACCESS MODES   STORAGECLASS   AGE
+mariadb-data           Bound    pvc-b81d2e47-0c3f-4a96-8e15-7f2a9c4d6e08   5Gi        RWO            default        12m
+prestashop-html        Bound    pvc-0e94a3b6-7d15-4c28-a6f1-5b8d2e3c9a71   3Gi        RWO            default        9m
+
+Las BD son ClusterIP (sin IP externa); solo los portales son LoadBalancer.

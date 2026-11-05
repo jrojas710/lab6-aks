@@ -1,0 +1,46 @@
+# BD propia de WordPress: MySQL 8. Solo ClusterIP (no se expone a Internet).
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata: {name: mysql-data, namespace: wordpress}
+spec:
+  accessModes: [ReadWriteOnce]
+  resources: {requests: {storage: 5Gi}}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata: {name: mysql, namespace: wordpress, labels: {app: mysql, portal: wordpress}}
+spec:
+  replicas: 1
+  strategy: {type: Recreate}          # disco RWO: el pod viejo debe soltarlo antes
+  selector: {matchLabels: {app: mysql}}
+  template:
+    metadata: {labels: {app: mysql, portal: wordpress}}
+    spec:
+      containers:
+        - name: mysql
+          image: mysql:8.0
+          env:
+            - {name: MYSQL_DATABASE, value: wordpress}
+            - {name: MYSQL_USER, value: wordpress}
+            - name: MYSQL_ROOT_PASSWORD
+              valueFrom: {secretKeyRef: {name: wp-db, key: root-password}}
+            - name: MYSQL_PASSWORD
+              valueFrom: {secretKeyRef: {name: wp-db, key: password}}
+          ports: [{containerPort: 3306}]
+          readinessProbe: {tcpSocket: {port: 3306}, initialDelaySeconds: 15, periodSeconds: 5}
+          resources:
+            requests: {cpu: 100m, memory: 384Mi}
+            limits: {memory: 1Gi}
+          volumeMounts:
+            - {name: data, mountPath: /var/lib/mysql, subPath: mysql}   # evita lost+found del disco
+      volumes:
+        - name: data
+          persistentVolumeClaim: {claimName: mysql-data}
+---
+apiVersion: v1
+kind: Service
+metadata: {name: mysql, namespace: wordpress}
+spec:
+  type: ClusterIP
+  selector: {app: mysql}
+  ports: [{port: 3306, targetPort: 3306}]

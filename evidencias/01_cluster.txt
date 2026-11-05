@@ -1,0 +1,11 @@
+Fecha: 2026-11-05T10:02:41-05:00
+Modo de aprovisionamiento: azd (sabbour/aks-app-template)
+Grupo de recursos: rg-lab6   Clúster: aks-lab6
+Región: eastus2
+Versión de Kubernetes: 1.33.3
+Tamaño de nodo: Standard_B2s x 2
+Grafana: https://graf-lab6-7c1e2a-d4f5g6h7.eus2.grafana.azure.com
+
+NAME                                STATUS   ROLES    AGE   VERSION   INTERNAL-IP   OS-IMAGE             KERNEL-VERSION      CONTAINER-RUNTIME
+aks-nodepool1-31842067-vmss000000   Ready    <none>   9m    v1.33.3   10.224.0.4    Ubuntu 22.04.5 LTS   5.15.0-1092-azure   containerd://1.7.27-1
+aks-nodepool1-31842067-vmss000001   Ready    <none>   9m    v1.33.3   10.224.0.5    Ubuntu 22.04.5 LTS   5.15.0-1092-azure   containerd://1.7.27-1

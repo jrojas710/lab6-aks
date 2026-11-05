@@ -1,0 +1,46 @@
+# BD propia de PrestaShop: MariaDB 10.11 (distinta a la de WordPress). Solo ClusterIP.
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata: {name: mariadb-data, namespace: prestashop}
+spec:
+  accessModes: [ReadWriteOnce]
+  resources: {requests: {storage: 5Gi}}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata: {name: mariadb, namespace: prestashop, labels: {app: mariadb, portal: prestashop}}
+spec:
+  replicas: 1
+  strategy: {type: Recreate}
+  selector: {matchLabels: {app: mariadb}}
+  template:
+    metadata: {labels: {app: mariadb, portal: prestashop}}
+    spec:
+      containers:
+        - name: mariadb
+          image: mariadb:10.11
+          env:
+            - {name: MARIADB_DATABASE, value: prestashop}
+            - {name: MARIADB_USER, value: prestashop}
+            - name: MARIADB_ROOT_PASSWORD
+              valueFrom: {secretKeyRef: {name: ps-db, key: root-password}}
+            - name: MARIADB_PASSWORD
+              valueFrom: {secretKeyRef: {name: ps-db, key: password}}
+          ports: [{containerPort: 3306}]
+          readinessProbe: {tcpSocket: {port: 3306}, initialDelaySeconds: 10, periodSeconds: 5}
+          resources:
+            requests: {cpu: 100m, memory: 256Mi}
+            limits: {memory: 768Mi}
+          volumeMounts:
+            - {name: data, mountPath: /var/lib/mysql, subPath: mysql}
+      volumes:
+        - name: data
+          persistentVolumeClaim: {claimName: mariadb-data}
+---
+apiVersion: v1
+kind: Service
+metadata: {name: mariadb, namespace: prestashop}
+spec:
+  type: ClusterIP
+  selector: {app: mariadb}
+  ports: [{port: 3306, targetPort: 3306}]

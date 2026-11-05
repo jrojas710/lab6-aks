@@ -1,0 +1,13 @@
+== Bases de datos ==
+NAME                          READY   STATUS    RESTARTS   AGE
+pod/mysql-f69thsvg85-j4nzt      1/1     Running   0          2m11s
+NAME            TYPE        CLUSTER-IP     EXTERNAL-IP   PORT(S)    AGE
+service/mysql   ClusterIP   10.0.148.203   <none>        3306/TCP   2m12s
+NAME             STATUS   VOLUME                                     CAPACITY   ACCESS MODES   STORAGECLASS   AGE
+mysql-data       Bound    pvc-3f0a6c1e-8d24-4b7e-9a51-2c6e7d1b0f93   5Gi        RWO            default        2m12s
+NAME                            READY   STATUS    RESTARTS   AGE
+pod/mariadb-vbvf9qgpbb-7n4p8      1/1     Running   0          2m10s
+NAME              TYPE        CLUSTER-IP     EXTERNAL-IP   PORT(S)    AGE
+service/mariadb   ClusterIP   10.0.61.87     <none>        3306/TCP   2m11s
+NAME             STATUS   VOLUME                                     CAPACITY   ACCESS MODES   STORAGECLASS   AGE
+mariadb-data     Bound    pvc-b81d2e47-0c3f-4a96-8e15-7f2a9c4d6e08   5Gi        RWO            default        2m11s

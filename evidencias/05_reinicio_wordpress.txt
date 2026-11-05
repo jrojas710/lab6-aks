@@ -1,0 +1,31 @@
+===== ANTES del reinicio (2026-11-05T10:31:02-05:00) =====
+NAME                          READY   STATUS    RESTARTS   AGE   IP            NODE
+mysql-f69thsvg85-j4nzt      1/1     Running   0          27m   10.244.1.12   aks-nodepool1-31842067-vmss000001
+wordpress-dmrk8sml8w-5j5sz     1/1     Running   0          24m   10.244.0.18   aks-nodepool1-31842067-vmss000000
+-- Página en la BD de WordPress:
++----+------------------------+---------------------+-------------+
+| ID | post_title             | post_date           | post_status |
++----+------------------------+---------------------+-------------+
+| 5  | Pagina de prueba Lab 6 | 2026-11-05 15:24:08 | publish     |
++----+------------------------+---------------------+-------------+
+-- HTTP http://203.0.113.24/?pagename=pagina-prueba-lab6 :
+<title>Pagina de prueba Lab 6 &#8211; Portal WordPress - Lab 6</title>
+
+===== kubectl rollout restart deploy/mysql deploy/wordpress =====
+deployment.apps/mysql restarted
+deployment.apps/wordpress restarted
+deployment "mysql" successfully rolled out
+deployment "wordpress" successfully rolled out
+
+===== DESPUÉS del reinicio (2026-11-05T10:32:26-05:00) — pods nuevos =====
+NAME                          READY   STATUS    RESTARTS   AGE   IP            NODE
+mysql-qw5f6zrnt9-p8p6j      1/1     Running   0          71s   10.244.1.17   aks-nodepool1-31842067-vmss000001
+wordpress-qdmdqlbzfp-tzrc2     1/1     Running   0          42s   10.244.0.23   aks-nodepool1-31842067-vmss000000
+-- Página en la BD de WordPress:
++----+------------------------+---------------------+-------------+
+| ID | post_title             | post_date           | post_status |
++----+------------------------+---------------------+-------------+
+| 5  | Pagina de prueba Lab 6 | 2026-11-05 15:24:08 | publish     |
++----+------------------------+---------------------+-------------+
+-- HTTP http://203.0.113.24/?pagename=pagina-prueba-lab6 :
+<title>Pagina de prueba Lab 6 &#8211; Portal WordPress - Lab 6</title>
